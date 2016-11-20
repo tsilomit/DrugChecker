@@ -1,0 +1,100 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 13, 2016, 10:40:13 PM
+    Author     : Lemonia
+*/
+
+body {
+/*    font-family: Verdana, Arial, sans-serif;
+    font-size: smaller;*/
+    color: #eee;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+	font-weight: 300;
+}
+
+h1 {
+    font-size: 40px;
+    color: #be7429;
+    font-weight: normal;
+    width: 450px;
+/*	font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;*/
+}
+
+table {
+    width: 580px;
+    padding: 10px;
+    background-color: #c5e7e0;
+}
+
+
+th {
+    text-align: left;
+    border-bottom: 1px solid;
+}
+
+td {
+    padding: 10px;
+}
+
+a:link {
+   color: #be7429;
+   font-weight: normal;
+   text-decoration: none;
+}
+
+a:link:hover {
+   color: #be7429;
+   font-weight: normal;
+   text-decoration: underline;
+}
+
+img {
+	z-index: -1;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	filter: grayscale(30%) blur(3px) brightness(85%);
+	-webkit-filter: grayscale(30%) blur(3px) brightness(85%);
+}
+
+label {
+	color: #ffffff;
+}
+
+footer p {
+	color: #ffffff;
+}
+
+.hero-unit {
+	border-radius: 20px;
+	margin: 20px auto 50px auto;
+	font-weight: bold;
+}
+
+.flex-column {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.flex-center-wrapper {
+    display: flex;
+    display: -webkit-flex;
+    align-content: center;
+    align-items: center;
+    -webkit-align-content: center;
+    -webkit-align-items: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    text-align: center;
+}
+
+#canary{
+    display: none !important;
+}
+
+
