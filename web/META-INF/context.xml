@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/DrugChecker"/>
+<Context path="/DrugChecker">
+<Resource name="jdbc/drugchecker" auth="Container" type="javax.sql.DataSource"
+               username="root" password="" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://localhost:3306/drugchecker" testWhileIdle="true" timeBetweenEvictionRunsMillis="300000" 
+               />
+</Context>

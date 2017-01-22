@@ -39,23 +39,44 @@
             </div>
         </div>
 
-
         <div class="container">
             <hgroup>
 
+                <% if (request.getAttribute("pageHeading") != null) { %>
+                <h1 class="hero-unit">${pageHeading}</h1>
+                <% }%>
+
             </hgroup>  
 
+            <%
+                session = request.getSession(false);
+                if (session == null || session.getAttribute("username") == null) {
+            %>
             <h1 class="hero-unit">Welcome to DrugChecker</h1>
 
             <div class="form-container" >
-                <div class="center">
-                    <h3>Wrong username or password.. Try again.</h3>
-                    <br><br>
+
+                <div class="center">                                                      
+                    
                     <form method="get" action="/DrugChecker/login.jsp">
-                        <button type="submit" class="btn btn-primary" value="Return">Return</button>
+                        <button type="submit" class="btn btn-primary" value="Login">Login</button>
                     </form>
-                  </div>
+                    
+                    <form method="get" action="/DrugChecker/register.jsp">
+                        <button type="submit" class="btn btn-primary" value="Register">Register</button>
+                    </form>
+                    
+                </div>
+                
 
             </div>
 
+
+            <%
+                } else {
+
+                    String redirectURL = "result1.jsp";
+                    response.sendRedirect(redirectURL);
+                }
+            %>
             <jsp:include page="/WEB-INF/jsp/footer.inc.jsp"></jsp:include>

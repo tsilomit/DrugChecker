@@ -31,25 +31,11 @@
                     </a>
                     <a href="/DrugChecker/"><header class="brand">DrugChecker</header></a>
 
+
                     <nav class="nav-collapse ">
                         <ul class="nav">
                         </ul>
                     </nav>
-<!--                    <script type="text/javascript">
-
-        //             redirect to main site
-                        if (location.pathname === "/DrugChecker/do.Connect") {
-                            console.log(window.location.href);
-                            window.location.href = "/DrugChecker/home.jsp";
-                        }
-
-        //                if ($('#profile').html() === "") {
-        //                    $("#logo").attr('href', 'login.jsp');
-        //                }
-
-                    </script>-->
-
-
                 </div>
             </div>
         </div>
@@ -82,13 +68,26 @@
                         <div class="form-group">
                             <!--<label for="password">Password*</label>-->
                             <input name="password" type="password" class="form-control" id="password" placeholder="Password">
+                            <input type="hidden" name="epilogi" readonly value="1"> 
                             <center><button type="submit" class="btn btn-primary" value="Login">Login</button></center>
+                        </div>  
+                    </form>
+                    
+                    <form action="SelectLogin" method="post">
+                        <div class="form-group">                        
+                            <!--<label for="username">Username*</label>-->
+                            <input name="username" type="text" class="form-control" id="username" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <!--<label for="password">Password*</label>-->
+                            <input name="password" type="password" class="form-control" id="password" placeholder="Password">
+                            <input type="hidden" name="epilogi" readonly value="2"> 
+                            <center><button type="submit" class="btn btn-primary" value="Login">Academic Login</button></center>
                         </div>  
                     </form>
 
                 </div>
-                <span style="margin-left: 1%;">*Please apply your University of Thessaly academic credentials to login.</span></br>
-
+               
             </div>
 
 

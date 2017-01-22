@@ -1,19 +1,61 @@
-<%-- 
-    Document   : wrong
-    Created on : Oct 19, 2016, 9:23:12 PM
-    Author     : Rania
---%>
+<%@taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql"%>
+<%@page import="java.util.*"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+         pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Try again!</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Welcome to DrugChecker</title>
+        <meta name="description" content="Welcome on DrugChecker" />
+        <meta name="keywords" content="FarAway" />
+        <meta name="author" content="Ourania Tsilomitrou" />
+        <link rel="stylesheet" href="css/bootstrap.css" />
+        <link rel="stylesheet" href="css/bootstrap-responsive.css" />
+        <link rel="stylesheet" href="css/bootstrap-dialog.min.css">
+        <link rel="stylesheet" href="css/main.css" />
+        <link rel="stylesheet" id="google_fonts-css" href="//fonts.googleapis.com/css?family=Megrim|Raleway|Open+Sans:400,400italic,700,700italic" type="text/css" media="all">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     </head>
-    <body>
-        <h1>Wrong username or password.</h1>
-    </body>
-</html>
+    <body class="flex-center-wrapper">
+        <img alt="" src="static/img/medicine.jpg"/>
+        <div class="navbar navbar-fixed-top  ">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a href="/DrugChecker/"><header class="brand">DrugChecker</header></a>
+
+                    <nav class="nav-collapse ">
+                        <ul class="nav">
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
 
 
+        <div class="container">
+            <hgroup>
+
+            </hgroup>  
+
+            <h1 class="hero-unit">Welcome to DrugChecker</h1>
+
+            <div class="form-container" >
+                <div class="center">
+                    <h3>Wrong username or password.. Try again.</h3>
+                    <br><br>
+                    <form method="get" action="/DrugChecker/login.jsp">
+                        <button type="submit" class="btn btn-primary" value="Return">Return</button>
+                    </form>
+                  </div>
+
+            </div>
+
+            <jsp:include page="/WEB-INF/jsp/footer.inc.jsp"></jsp:include>

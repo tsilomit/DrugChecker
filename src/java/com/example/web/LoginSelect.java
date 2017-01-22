@@ -1,6 +1,6 @@
 package com.example.web;
 
-import com.example.model.LoginExpert;
+
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,18 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import com.uthldap.Uthldap;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -45,106 +38,112 @@ public class LoginSelect extends HttpServlet {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String epilogi = request.getParameter("epilogi");
 
-        String name;
+        if (epilogi.equals("2")){
+            String name;
+            
+            Uthldap ldap = new Uthldap(username, password);
 
-        String appPath = request.getServletContext().getRealPath("");
+            if (ldap.auth()) {
 
-        String logPath = appPath + File.separator + LOG_DIR;
-        File logDir = new File(logPath);
-        System.out.println(logDir);
-        if (!logDir.exists()) {
-            logDir.mkdir();
-        }
-        logDir.getParentFile().mkdirs();
-        PrintWriter logWriter = new PrintWriter(new BufferedWriter(new FileWriter(logDir + File.separator + "log.txt",true)));
-        logWriter.append("-------------------------\n" + new SimpleDateFormat("[MM/dd/yyyy HH:mm:ss]").format(new Date()) + "Username: " + username + "\t" + "Password: " + password + "\n");
+                try {
+                    // Register JDBC driver
+                    Class.forName("com.mysql.jdbc.Driver");
 
-        Uthldap ldap = new Uthldap(username, password);
+                    // Open a connection
+                    Connection conn;
 
-        if (ldap.auth()) {
+                    conn = DriverManager.getConnection(DB_URL, DBUSER, DBPASS);
 
-            try {
-                // Register JDBC driver
-                Class.forName("com.mysql.jdbc.Driver");
+                    Statement stmt = conn.createStatement();
 
-                // Open a connection
-                Connection conn;
+                    String email = ldap.getMail();
+                    String fullname = ldap.getName();
+                    String _name = fullname.substring(0, fullname.lastIndexOf(" "));
+                    String surname = fullname.substring(fullname.lastIndexOf(" ") + 1, fullname.length()).toLowerCase();
+                    surname = surname.substring(0, 1).toUpperCase() + surname.substring(1, surname.length());
 
-                conn = DriverManager.getConnection(DB_URL, DBUSER, DBPASS);
+                   
+                    String sql = ("SELECT * FROM users WHERE username='" + username + "';");
+                    System.out.println("init query: " + sql);
+                    ResultSet rs = stmt.executeQuery(sql);
+                    if (!rs.first()) {
 
-                Statement stmt = conn.createStatement();
+                        sql = "INSERT INTO `users`"
+                            + "(`username`, `name`, `surname`, "
+                            + "`password`, `email`) VALUES "
+                            + "('" + username + "','" + _name + "','" + surname + "',"
+                            + "'" + password + "','"  + email + "')";
+                        
+                        System.out.println("insert query: " + sql);
+                        stmt.executeUpdate(sql);
+                        System.out.println("Inserted user " + username + " into the system...");
 
-                String email = ldap.getMail();
-                String affiliation = ldap.getAffiliation();
-                String dep = ldap.getDept();
-                String fullname = ldap.getName();
-                String _name = fullname.substring(0, fullname.lastIndexOf(" "));
-                String surname = fullname.substring(fullname.lastIndexOf(" ") + 1, fullname.length()).toLowerCase();
-                surname = surname.substring(0, 1).toUpperCase() + surname.substring(1, surname.length());
+                    } 
+                    conn.close();
 
-                logWriter.append("     " + new SimpleDateFormat("[MM/dd/yyyy HH:mm:ss]").format(new Date()) + "Connecting to LDAP\n");
-                int login_no = 1;
-
-                String sql = ("SELECT * FROM users WHERE username='" + username + "';");
-                System.out.println("init query: " + sql);
-                logWriter.append("     " + new SimpleDateFormat("[MM/dd/yyyy HH:mm:ss]").format(new Date()) + "Database Connection\n");
-                ResultSet rs = stmt.executeQuery(sql);
-                if (!rs.first()) {
-
-                    sql = "INSERT INTO `users`"
-                            + "(`username`, `name`, `surname`, `department`, "
-                            + "`affiliation`, `login_no`, `email`) VALUES "
-                            + "('" + username + "','" + _name + "','" + surname + "','" + dep + "',"
-                            + "'" + affiliation + "'," + login_no + ",'" + email + "')";
-                    System.out.println("insert query: " + sql);
-                    logWriter.append("     " + new SimpleDateFormat("[MM/dd/yyyy HH:mm:ss]").format(new Date()) + "Insert user "+username);
-                    stmt.executeUpdate(sql);
-                    System.out.println("Inserted user " + username + " into the system...");
-
-                } else {
-                    login_no = rs.getInt("login_no");
-                    login_no++;
-                    System.out.println("increase login_no: " + login_no);
-
-                    Statement stmt2 = conn.createStatement();
-
-                    sql = "UPDATE `users` "
-                            + "SET login_no = " + login_no + "  WHERE username='" + username + "' ";
-                    System.out.println("update query: " + sql);
-                    logWriter.append("     " + new SimpleDateFormat("[MM/dd/yyyy HH:mm:ss]").format(new Date()) + " User: "+fullname+"  Login No: "+ login_no+ "\n");
-
-                    stmt2.executeUpdate(sql);
-
+                } catch (ClassNotFoundException e) {
+                    System.out.println(e.getMessage());
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
                 }
-                conn.close();
-                logWriter.append("-------------------------\n");
-                logWriter.close();
+                HttpSession session = request.getSession();
+                session.setAttribute("username", username);
+                name = ldap.getName();
+                System.out.println("username " + name);
+                request.setAttribute("username", name);
+                RequestDispatcher view = request.getRequestDispatcher("result1.jsp");
+                view.forward(request, response);
 
-            } catch (ClassNotFoundException e) {
-                logWriter.append("-------------------------\n");
-                logWriter.close();
-                System.out.println(e.getMessage());
-            } catch (SQLException e) {
-                logWriter.append("-------------------------\n");
-                logWriter.close();
-                System.out.println(e.getMessage());
+            } else {
+                RequestDispatcher view = request.getRequestDispatcher("wrong.jsp");
+                view.forward(request, response);
             }
-            logWriter.append("-------------------------\n");
-            logWriter.close();
-            HttpSession session = request.getSession();
-            session.setAttribute("username", username);
-            name = ldap.getName();
-            System.out.println("username " + name);
-            request.setAttribute("username", name);
-            RequestDispatcher view = request.getRequestDispatcher("result1.jsp");
-            view.forward(request, response);
+        }
+        else{            
+                try {
+                        // Register JDBC driver
+                        Class.forName("com.mysql.jdbc.Driver");
 
-        } else {
-            logWriter.append("-------------------------\n");
-            logWriter.close();
-            RequestDispatcher view = request.getRequestDispatcher("wrong.jsp");
-            view.forward(request, response);
+                        // Open a connection
+                        Connection conn;
+
+                        conn = DriverManager.getConnection(DB_URL, DBUSER, DBPASS);
+
+                        Statement stmt = conn.createStatement();
+                        
+                        String sql = ("SELECT * FROM users WHERE username='" + username + "';");
+                        
+                        ResultSet rs = stmt.executeQuery(sql);
+                        
+                        if (rs.first()) {
+                            
+                            String check_password = rs.getString("password");
+                            if(check_password.equals(password)){
+                                conn.close();
+                                HttpSession session = request.getSession();
+                                session.setAttribute("username", username);
+                                System.out.println("username " + username);
+                                request.setAttribute("username", username);
+                                RequestDispatcher view = request.getRequestDispatcher("result1.jsp");
+                                view.forward(request, response);
+                            }
+                            else{
+                                RequestDispatcher view = request.getRequestDispatcher("wrong.jsp");
+                                view.forward(request, response);
+                            }
+                        }
+                        else{
+                                RequestDispatcher view = request.getRequestDispatcher("wrong.jsp");
+                                view.forward(request, response);
+                        }
+                    }catch (ClassNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                                                        
+            }
         }
 
     }
